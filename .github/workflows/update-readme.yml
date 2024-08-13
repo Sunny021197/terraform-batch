@@ -15,7 +15,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          persist-credentials: false  # Disable default credentials
+          token: ${{ secrets.TOKEN01 }}  # Ensure the token is used for authentication
 
       - name: Set up Git user
         run: |
@@ -42,9 +42,11 @@ jobs:
           # Optionally specify which files to render
           # terraform_dir: ./path/to/terraform/configs
 
+      - name: Set up authentication for git push
+        run: |
+          git remote set-url origin https://x-access-token:${{ secrets.TOKEN01 }}@github.com/${{ github.repository }}.git
+
       - name: Commit and push changes
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN01 }}
         run: |
           git add README.md
           git commit -m "Update Terraform documentation"
