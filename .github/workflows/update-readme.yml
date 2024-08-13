@@ -1,53 +1,53 @@
-name: Terraform Docs
+# name: Terraform Docs
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
+#   pull_request:
+#     branches:
+#       - main
 
-jobs:
-  generate-docs:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.TOKEN01 }}  # Ensure the token is used for authentication
+# jobs:
+#   generate-docs:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
+#         with:
+#           token: ${{ secrets.TOKEN01 }}  # Ensure the token is used for authentication
 
-      - name: Set up Git user
-        run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "actions@github.com"
+#       - name: Set up Git user
+#         run: |
+#           git config --global user.name "github-actions"
+#           git config --global user.email "actions@github.com"
 
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.5.0 # Specify the version of Terraform you use
+#       - name: Set up Terraform
+#         uses: hashicorp/setup-terraform@v2
+#         with:
+#           terraform_version: 1.5.0 # Specify the version of Terraform you use
 
-      - name: Install terraform-docs
-        run: |
-          curl -sSLo ./terraform-docs.tar.gz https://github.com/terraform-docs/terraform-docs/releases/download/v0.18.0/terraform-docs-v0.18.0-linux-amd64.tar.gz
-          tar -xzf terraform-docs.tar.gz
-          chmod +x terraform-docs
-          sudo mv terraform-docs /usr/local/bin/
+#       - name: Install terraform-docs
+#         run: |
+#           curl -sSLo ./terraform-docs.tar.gz https://github.com/terraform-docs/terraform-docs/releases/download/v0.18.0/terraform-docs-v0.18.0-linux-amd64.tar.gz
+#           tar -xzf terraform-docs.tar.gz
+#           chmod +x terraform-docs
+#           sudo mv terraform-docs /usr/local/bin/
 
-      - name: Generate Terraform docs
-        uses: terraform-docs/gh-actions@v1
-        with:
-          output_file: README.md
-          output_mode: inject
-          # Optionally specify which files to render
-          # terraform_dir: ./path/to/terraform/configs
+#       - name: Generate Terraform docs
+#         uses: terraform-docs/gh-actions@v1
+#         with:
+#           output_file: README.md
+#           output_mode: inject
+#           # Optionally specify which files to render
+#           # terraform_dir: ./path/to/terraform/configs
 
-      - name: Set up authentication for git push
-        run: |
-          git remote set-url origin https://x-access-token:${{ secrets.TOKEN01 }}@github.com/${{ github.repository }}.git
+#       - name: Set up authentication for git push
+#         run: |
+#           git remote set-url origin https://x-access-token:${{ secrets.TOKEN01 }}@github.com/${{ github.repository }}.git
 
-      - name: Commit and push changes
-        run: |
-          git add README.md
-          git commit -m "Update Terraform documentation"
-          git push origin HEAD:main
+#       - name: Commit and push changes
+#         run: |
+#           git add README.md
+#           git commit -m "Update Terraform documentation"
+#           git push origin HEAD:main
