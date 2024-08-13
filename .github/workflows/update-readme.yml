@@ -44,7 +44,7 @@ jobs:
 
       - name: Commit and push changes
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN01 }}
         run: |
           git add README.md
           git commit -m "Update Terraform documentation"
