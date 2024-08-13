@@ -4,13 +4,23 @@ on:
   push:
     branches:
       - main
-      
+  pull_request:
+    branches:
+      - main
+
 jobs:
   generate-docs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          persist-credentials: false  # Disable default credentials
+
+      - name: Set up Git user
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2
@@ -33,10 +43,9 @@ jobs:
           # terraform_dir: ./path/to/terraform/configs
 
       - name: Commit and push changes
-        if: github.ref == 'refs/heads/main'
-        uses: EndBug/add-and-commit@v9
-        with:
-          add: 'README.md'
-          message: 'Update Terraform documentation'
-          author_name: 'github-actions'
-          author_email: 'actions@github.com'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git add README.md
+          git commit -m "Update Terraform documentation"
+          git push origin HEAD:main
